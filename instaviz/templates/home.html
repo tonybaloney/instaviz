@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Code Object Visualizer</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="static/prism.css" rel="stylesheet" />
+    <link rel="stylesheet" href="static/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T">
 </head>
 <body class="container-fluid">
+<script src="static/prism.js"></script>
  {% if tpl_t == 'AST' %}
     <h1>AST Visualizer</h1>
     <p>Not yet implemented</p>
@@ -25,7 +27,7 @@
         <tbody>
             <tr><td>co_argcount</td><td>{{co.co_argcount}}</td></tr>
             <tr><td>co_cellvars</td><td>{{co.co_cellvars}}</td></tr>
-            <tr><td>co_code</td><td>{{co.co_code}}</td></tr>
+            <tr><td>co_code</td><td>{{co.co_code.hex()}}</td></tr>
             <tr><td>co_consts</td><td>{{co.co_consts}}</td></tr>
             <tr><td>co_filename</td><td>{{co.co_filename}}</td></tr>
             <tr><td>co_firstlineno</td><td>{{co.co_firstlineno}}</td></tr>
@@ -41,35 +43,43 @@
     </table>
 </div>
         <div class="col-md-6">
-    <h2>Disassembled Code</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>OpCode</th>
-                <th>Operation Name</th>
-                <th>Numeric Arg</th>
-                <th>Resolved Arg Value</th>
-                <th>Argument description</th>
-                <th>Index Offset</th>
-                <th>Starts Line</th>
-                <th>Is Jump Target?</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for instr in ins %}
-            <tr>
-                <td>{{instr.opcode}}</td>
-                <td>{{instr.opname}}</td>
-                <td>{{instr.arg}}</td>
-                <td>{{instr.argval}}</td>
-                <td>{{instr.argrepr}}</td>
-                <td>{{instr.offset}}</td>
-                <td>{{instr.starts_line}}</td>
-                <td>{{instr.is_jump_target}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            <h2>Disassembled Code</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>OpCode</th>
+                        <th>Operation Name</th>
+                        <th>Numeric Arg</th>
+                        <th>Resolved Arg Value</th>
+                        <th>Argument description</th>
+                        <th>Index Offset</th>
+                        <th>Starts Line</th>
+                        <th>Is Jump Target?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for instr in ins %}
+                    <tr>
+                        <td>{{instr.opcode}}</td>
+                        <td>{{instr.opname}}</td>
+                        <td>{{instr.arg}}</td>
+                        <td>{{instr.argval}}</td>
+                        <td>{{instr.argrepr}}</td>
+                        <td>{{instr.offset}}</td>
+                        <td>{{instr.starts_line}}</td>
+                        <td>{{instr.is_jump_target}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <pre class="line-numbers">
+                    <code class="language-python">
+{% for line in src %}{{line}}{% endfor %}</code>
+                </pre>
             </div>
         </div>
  {% else %}

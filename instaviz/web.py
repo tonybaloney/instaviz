@@ -1,10 +1,14 @@
 """
 Entry points for managing a micro-http server to serve tables.
 """
-from bottle import run
-from bottle import jinja2_view, route
+from bottle import run, jinja2_view, route, static_file
 
 data = {}
+
+
+@route('/static/<filename>')
+def server_static(filename):
+    return static_file(filename, root='instaviz/static')
 
 
 @route('/', name='home')
@@ -29,7 +33,15 @@ def show_code_object(obj, instructions):
     global data
     data['co'] = obj
     data['tpl_t'] = "CO"
-    data['ins'] = instructions
+    data['ins'] = list(instructions)
+    # Read source code
+    try:
+        with open(obj.co_filename, "r") as source_f:
+            src = source_f.readlines()
+            src = src[obj.co_firstlineno-1:]
+            data['src'] = src
+    except FileNotFoundError:
+        data['src'] = ''
     start()
 
 
