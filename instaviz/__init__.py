@@ -1,8 +1,8 @@
 """
-InstaViz - a tool for visulizing ASTs and CPython code objects in a web server.
+InstaViz - a tool for visualizing ASTs and CPython code objects in a web server.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 from .web import show_ast, show_code_object
 import ast
 from dis import get_instructions
@@ -15,9 +15,7 @@ def show(obj):
     :type  obj: ``ast.AST` or `codeobject`
     :return:
     """
-    if isinstance(obj, ast.AST):
-        show_ast(obj)
-    elif hasattr(obj, "__code__"):
+    if hasattr(obj, "__code__"):
         instructions = get_instructions(obj.__code__)
         show_code_object(obj.__code__, instructions)
     else:
