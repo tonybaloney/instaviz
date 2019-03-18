@@ -1,6 +1,14 @@
 # instaviz
 Instant visualization of Python AST and Code Objects.
 
+## Installation
+
+Requires modern Python 3.6+
+
+```bash
+pip install instaviz
+```
+
 ## Usage
 
 Instaviz is designed to be used like PDB, it will start a webserver when the `show()` function is called. Simply pass a class or function to be displayed
