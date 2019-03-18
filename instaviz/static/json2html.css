@@ -1,0 +1,25 @@
+#page {min-height:600px;}
+.package {padding:3px;border-radius:2px;margin-top:3px;}
+.header {cursor:pointer;}
+
+.name {color:gray;}
+
+.array {background-color:#FFD8BB;border:thin solid #FFB780;}
+.object {background-color:#E7F1FE;border:thin solid #7DA2CE;}
+.string {color:red;}
+.number {color:blue;}
+.function {color:green;}
+
+.open .children {display:block;}
+.closed .children {display:none;}
+
+.arrow {background-image:url("../img/d.png"); background-repeat:no-repeat; background-color:transparent; height:15px; width:15px; display:inline-block;}
+
+.open .arrow {background-position:-20px 0;}
+.closed .arrow {background-position:0 0;}
+
+.type {color:gray;font-size:8pt;float:right;}
+
+.hide {display:none;}
+
+#main {width:100%;height:500px;overflow-y:scroll;}

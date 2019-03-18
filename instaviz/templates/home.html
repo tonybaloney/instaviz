@@ -7,6 +7,24 @@
     <style>
         {{style}}
     </style>
+        <style type="text/css">
+        body {
+            font: 12pt sans;
+        }
+
+        #mynetwork {
+            width: 95%;
+            height: 800px;
+            border: none;
+        }
+    </style>
+    <script type="text/javascript" src="static/vis.js"></script>
+    <link href="static/vis-network.min.css" rel="stylesheet" type="text/css"/>
+    <link href="static/json2html.css" rel="stylesheet" type="text/css"/>
+    <script src="static/jquery.min.js"></script>
+    <script src="static/jquery.json2html.js"></script>
+    <script src="static/json2html.js"></script>
+    <script src="static/node.js"></script>
     <script type="application/javascript">
         function showLine(line){
             el = document.getElementById('src-'+line)
@@ -21,15 +39,75 @@
             }
         }
     </script>
+     <script type="text/javascript">
+        var nodes = null;
+        var nodeData = new Map();
+        var edges = null;
+        var network = null;
+        var directionInput = document.getElementById("direction");
+
+        function destroy() {
+            if (network !== null) {
+                network.destroy();
+                network = null;
+            }
+        }
+
+        function draw() {
+            destroy();
+            nodes = [];
+            edges = [];
+
+            {% for node in nodes %}
+                nodes.push({id: {{node.id}}, label: "{{node.name}}", fields: "{{node.fields}}"});
+                edges.push({from: {{node.id}}, to: {{node.parent}}});
+                nodeData.set({{node.id}}, {{node.data}});
+            {% endfor %}
+
+            // create a network
+            var container = document.getElementById('mynetwork');
+            var data = {
+                nodes: nodes,
+                edges: edges
+            };
+
+            var options = {
+                edges: {
+                    smooth: {
+                        type: 'cubicBezier',
+                        forceDirection: (directionInput.value == "UD" || directionInput.value == "DU") ? 'vertical' : 'horizontal',
+                        roundness: 0.4
+                    }
+                },
+                layout: {
+                    hierarchical: {
+                        direction: directionInput.value
+                    }
+                },
+                physics:false
+            };
+            network = new vis.Network(container, data, options);
+
+            // add event listeners
+            network.on('select', function (params) {
+                var d = nodeData.get(params.nodes[0]);
+                visualize(d);
+                if (d != undefined && d.lineno) {
+                    showLine(d.lineno + {{co.co_firstlineno}} -1);
+                }
+            });
+            network.on('deselectNode', function (params) {
+                var d = nodeData.get(params.nodes[0]);
+                if (d != undefined && d.lineno) {
+                    unshowLine(d.lineno + {{co.co_firstlineno}} -1);
+                }
+            });
+        }
+
+    </script>
 </head>
 
-<body class="container-fluid">
-
-
- {% if tpl_t == 'AST' %}
-    <h1>AST Visualizer</h1>
-    <p>Not yet implemented</p>
- {% elif tpl_t == 'CO' %}
+<body class="container-fluid" onload="draw();">
     <h1>Code Object Visualizer</h1>
 
     <div class="row">
@@ -60,48 +138,84 @@
         </tbody>
     </table>
 </div>
-        <div class="col-md-6">
-            <h2>Disassembled Code</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>OpCode</th>
-                        <th>Operation Name</th>
-                        <th>Numeric Arg</th>
-                        <th>Resolved Arg Value</th>
-                        <th>Argument description</th>
-                        <th>Index Offset</th>
-                        <th>Starts Line</th>
-                        <th>Is Jump Target?</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% set ns = namespace(lastline=1) %}
-                    {% for instr in ins %}
-                    {% if instr.starts_line %}
-                        {% set ns.lastline = instr.starts_line %}
-                    {% endif %}
-                    <tr onmouseenter="showLine({{ns.lastline}})" onmouseleave="unshowLine({{ns.lastline}})">
-                        <td>{{instr.opcode}}</td>
-                        <td>{{instr.opname}}</td>
-                        <td>{{instr.arg}}</td>
-                        <td>{{instr.argval}}</td>
-                        <td>{{instr.argrepr}}</td>
-                        <td>{{instr.offset}}</td>
-                        <td>{{instr.starts_line}}</td>
-                        <td>{{instr.is_jump_target}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="col-md-6">
+                <h2>Disassembled Code</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>OpCode</th>
+                            <th>Operation Name</th>
+                            <th>Numeric Arg</th>
+                            <th>Resolved Arg Value</th>
+                            <th>Argument description</th>
+                            <th>Index Offset</th>
+                            <th>Starts Line</th>
+                            <th>Is Jump Target?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set ns = namespace(lastline=1) %}
+                        {% for instr in ins %}
+                        {% if instr.starts_line %}
+                            {% set ns.lastline = instr.starts_line %}
+                        {% endif %}
+                        <tr onmouseenter="showLine({{ns.lastline}})" onmouseleave="unshowLine({{ns.lastline}})">
+                            <td>{{instr.opcode}}</td>
+                            <td>{{instr.opname}}</td>
+                            <td>{{instr.arg}}</td>
+                            <td>{{instr.argval}}</td>
+                            <td>{{instr.argrepr}}</td>
+                            <td>{{instr.offset}}</td>
+                            <td>{{instr.starts_line}}</td>
+                            <td>{{instr.is_jump_target}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+        </div>
+            <div class="row">
+                <div class="col-md-12">
+                    {{code}}
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                {{code}}
-        </div>
- {% else %}
-    Not sure what this is..?
- {% endif %}
+            <div class="row">
+                <div class="col-md-8">
+                    <p>
+                        <input type="button" id="btn-UD" value="Up-Down">
+                        <input type="button" id="btn-DU" value="Down-Up">
+                        <input type="button" id="btn-LR" value="Left-Right">
+                        <input type="button" id="btn-RL" value="Right-Left">
+                        <input type="hidden" id='direction' value="UD">
+                    </p>
+                    <div id="mynetwork"></div>
+                </div>
+                <div class="col-md-4">
+                    <p id="selection"></p>
+                </div>
+                </div>
+<script language="JavaScript">
+    var directionInput = document.getElementById("direction");
+    var btnUD = document.getElementById("btn-UD");
+    btnUD.onclick = function () {
+        directionInput.value = "UD";
+        draw();
+    };
+    var btnDU = document.getElementById("btn-DU");
+    btnDU.onclick = function () {
+        directionInput.value = "DU";
+        draw();
+    };
+    var btnLR = document.getElementById("btn-LR");
+    btnLR.onclick = function () {
+        directionInput.value = "LR";
+        draw();
+    };
+    var btnRL = document.getElementById("btn-RL");
+    btnRL.onclick = function () {
+        directionInput.value = "RL";
+        draw();
+    };
+</script>
 </body>
 </html>
