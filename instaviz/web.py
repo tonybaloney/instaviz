@@ -76,24 +76,12 @@ def node_to_dict(node, parent):
     i.append(
         {
             "id": id(node),
-            "name": str(type(node)),
-            "fields": node._fields,
+            "name": type(node).__name__,
             "parent": id(parent),
             "data": json.dumps(d, skipkeys=True),
         }
     )
     return i
-
-
-class VizVisitor(ast.NodeVisitor):
-    def __init__(self):
-        self.id = 0
-        self.nodes = []
-
-    def generic_visit(self, node):
-        self.id += 1
-        self.nodes.append()
-        super().generic_visit(node)
 
 
 def show_code_object(obj, instructions):
