@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Code Object Visualizer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body class="container-fluid">
+ {% if tpl_t == 'AST' %}
+    <h1>AST Visualizer</h1>
+    <p>Not yet implemented</p>
+ {% elif tpl_t == 'CO' %}
+    <h1>Code Object Visualizer</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Code Object Properties</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>co_argcount</td><td>{{co.co_argcount}}</td></tr>
+            <tr><td>co_cellvars</td><td>{{co.co_cellvars}}</td></tr>
+            <tr><td>co_code</td><td>{{co.co_code}}</td></tr>
+            <tr><td>co_consts</td><td>{{co.co_consts}}</td></tr>
+            <tr><td>co_filename</td><td>{{co.co_filename}}</td></tr>
+            <tr><td>co_firstlineno</td><td>{{co.co_firstlineno}}</td></tr>
+            <tr><td>co_freevars</td><td>{{co.co_freevars}}</td></tr>
+            <tr><td>co_kwonlyargcount</td><td>{{co.co_kwonlyargcount}}</td></tr>
+            <tr><td>co_lnotab</td><td>{{co.co_lnotab}}</td></tr>
+            <tr><td>co_name</td><td>{{co.co_name}}</td></tr>
+            <tr><td>co_names</td><td>{{co.co_names}}</td></tr>
+            <tr><td>co_nlocals</td><td>{{co.co_nlocals}}</td></tr>
+            <tr><td>co_stacksize</td><td>{{co.co_stacksize}}</td></tr>
+            <tr><td>co_varnames</td><td>{{co.co_varnames}}</td></tr>
+        </tbody>
+    </table>
+</div>
+        <div class="col-md-6">
+    <h2>Disassembled Code</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>OpCode</th>
+                <th>Operation Name</th>
+                <th>Numeric Arg</th>
+                <th>Resolved Arg Value</th>
+                <th>Argument description</th>
+                <th>Index Offset</th>
+                <th>Starts Line</th>
+                <th>Is Jump Target?</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for instr in ins %}
+            <tr>
+                <td>{{instr.opcode}}</td>
+                <td>{{instr.opname}}</td>
+                <td>{{instr.arg}}</td>
+                <td>{{instr.argval}}</td>
+                <td>{{instr.argrepr}}</td>
+                <td>{{instr.offset}}</td>
+                <td>{{instr.starts_line}}</td>
+                <td>{{instr.is_jump_target}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+            </div>
+        </div>
+ {% else %}
+    Not sure what this is..?
+ {% endif %}
+</body>
+</html>
