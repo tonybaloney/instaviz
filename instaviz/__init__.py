@@ -2,22 +2,20 @@
 InstaViz - a tool for visualizing ASTs and CPython code objects in a web server.
 """
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 from .web import show_ast, show_code_object
-import ast
 from dis import get_instructions
 
 
 def show(obj):
     """
     Start a web server and show `obj` in the WebUI
-    :param obj: Show an AST or code object.
-    :type  obj: ``ast.AST` or `codeobject`
+    Assumes `obj` is compiled and has `__code__` attribute.
     :return:
     """
     if hasattr(obj, "__code__"):
         instructions = get_instructions(obj.__code__)
         show_code_object(obj.__code__, instructions)
     else:
-        print("Not sure what to do with {0}".format(type(obj)))
+        print("{0} is not compiled, could not located __code__ attribute.".format(type(obj)))
         return
