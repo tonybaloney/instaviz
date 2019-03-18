@@ -97,9 +97,8 @@
                 }
             });
             network.on('deselectNode', function (params) {
-                var d = nodeData.get(params.nodes[0]);
-                if (d != undefined && d.lineno) {
-                    unshowLine(d.lineno + {{co.co_firstlineno}} -1);
+                for (var i = {{co.co_firstlineno}}; i <= {{last_line}}; i++){
+                    unshowLine(i);
                 }
             });
         }
@@ -113,109 +112,112 @@
     <div class="row">
         <div class="col-md-6">
             <h2>Code Object Properties</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Field</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>co_argcount</td><td>{{co.co_argcount}}</td></tr>
-            <tr><td>co_cellvars</td><td>{{co.co_cellvars}}</td></tr>
-            <tr><td>co_code</td><td>{{co.co_code.hex()}}</td></tr>
-            <tr><td>co_consts</td><td>{{co.co_consts}}</td></tr>
-            <tr><td>co_filename</td><td>{{co.co_filename}}</td></tr>
-            <tr><td>co_firstlineno</td><td>{{co.co_firstlineno}}</td></tr>
-            <tr><td>co_freevars</td><td>{{co.co_freevars}}</td></tr>
-            <tr><td>co_kwonlyargcount</td><td>{{co.co_kwonlyargcount}}</td></tr>
-            <tr><td>co_lnotab</td><td>{{co.co_lnotab}}</td></tr>
-            <tr><td>co_name</td><td>{{co.co_name}}</td></tr>
-            <tr><td>co_names</td><td>{{co.co_names}}</td></tr>
-            <tr><td>co_nlocals</td><td>{{co.co_nlocals}}</td></tr>
-            <tr><td>co_stacksize</td><td>{{co.co_stacksize}}</td></tr>
-            <tr><td>co_varnames</td><td>{{co.co_varnames}}</td></tr>
-        </tbody>
-    </table>
-</div>
-            <div class="col-md-6">
-                <h2>Disassembled Code</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>OpCode</th>
-                            <th>Operation Name</th>
-                            <th>Numeric Arg</th>
-                            <th>Resolved Arg Value</th>
-                            <th>Argument description</th>
-                            <th>Index Offset</th>
-                            <th>Starts Line</th>
-                            <th>Is Jump Target?</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% set ns = namespace(lastline=1) %}
-                        {% for instr in ins %}
-                        {% if instr.starts_line %}
-                            {% set ns.lastline = instr.starts_line %}
-                        {% endif %}
-                        <tr onmouseenter="showLine({{ns.lastline}})" onmouseleave="unshowLine({{ns.lastline}})">
-                            <td>{{instr.opcode}}</td>
-                            <td>{{instr.opname}}</td>
-                            <td>{{instr.arg}}</td>
-                            <td>{{instr.argval}}</td>
-                            <td>{{instr.argrepr}}</td>
-                            <td>{{instr.offset}}</td>
-                            <td>{{instr.starts_line}}</td>
-                            <td>{{instr.is_jump_target}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>co_argcount</td><td>{{co.co_argcount}}</td></tr>
+                    <tr><td>co_cellvars</td><td>{{co.co_cellvars}}</td></tr>
+                    <tr><td>co_code</td><td>{{co.co_code.hex()}}</td></tr>
+                    <tr><td>co_consts</td><td>{{co.co_consts}}</td></tr>
+                    <tr><td>co_filename</td><td>{{co.co_filename}}</td></tr>
+                    <tr><td>co_firstlineno</td><td>{{co.co_firstlineno}}</td></tr>
+                    <tr><td>co_freevars</td><td>{{co.co_freevars}}</td></tr>
+                    <tr><td>co_kwonlyargcount</td><td>{{co.co_kwonlyargcount}}</td></tr>
+                    <tr><td>co_lnotab</td><td>{{co.co_lnotab}}</td></tr>
+                    <tr><td>co_name</td><td>{{co.co_name}}</td></tr>
+                    <tr><td>co_names</td><td>{{co.co_names}}</td></tr>
+                    <tr><td>co_nlocals</td><td>{{co.co_nlocals}}</td></tr>
+                    <tr><td>co_stacksize</td><td>{{co.co_stacksize}}</td></tr>
+                    <tr><td>co_varnames</td><td>{{co.co_varnames}}</td></tr>
+                </tbody>
+            </table>
         </div>
-            <div class="row">
-                <div class="col-md-12">
-                    {{code}}
-                </div>
+        <div class="col-md-6">
+            <h2>Disassembled Code</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>OpCode</th>
+                        <th>Operation Name</th>
+                        <th>Numeric Arg</th>
+                        <th>Resolved Arg Value</th>
+                        <th>Argument description</th>
+                        <th>Index Offset</th>
+                        <th>Starts Line</th>
+                        <th>Is Jump Target?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set ns = namespace(lastline=1) %}
+                    {% for instr in ins %}
+                    {% if instr.starts_line %}
+                        {% set ns.lastline = instr.starts_line %}
+                    {% endif %}
+                    <tr onmouseenter="showLine({{ns.lastline}})" onmouseleave="unshowLine({{ns.lastline}})">
+                        <td>{{instr.opcode}}</td>
+                        <td>{{instr.opname}}</td>
+                        <td>{{instr.arg}}</td>
+                        <td>{{instr.argval}}</td>
+                        <td>{{instr.argrepr}}</td>
+                        <td>{{instr.offset}}</td>
+                        <td>{{instr.starts_line}}</td>
+                        <td>{{instr.is_jump_target}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             </div>
-            <div class="row">
-                <div class="col-md-8">
-                    <p>
-                        <input type="button" id="btn-UD" value="Up-Down">
-                        <input type="button" id="btn-DU" value="Down-Up">
-                        <input type="button" id="btn-LR" value="Left-Right">
-                        <input type="button" id="btn-RL" value="Right-Left">
-                        <input type="hidden" id='direction' value="UD">
-                    </p>
-                    <div id="mynetwork"></div>
-                </div>
-                <div class="col-md-4">
-                    <p id="selection"></p>
-                </div>
-                </div>
-<script language="JavaScript">
-    var directionInput = document.getElementById("direction");
-    var btnUD = document.getElementById("btn-UD");
-    btnUD.onclick = function () {
-        directionInput.value = "UD";
-        draw();
-    };
-    var btnDU = document.getElementById("btn-DU");
-    btnDU.onclick = function () {
-        directionInput.value = "DU";
-        draw();
-    };
-    var btnLR = document.getElementById("btn-LR");
-    btnLR.onclick = function () {
-        directionInput.value = "LR";
-        draw();
-    };
-    var btnRL = document.getElementById("btn-RL");
-    btnRL.onclick = function () {
-        directionInput.value = "RL";
-        draw();
-    };
-</script>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{code}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <p>
+                    Graph direction:
+                    <input type="button" id="btn-UD" value="Up-Down">
+                    <input type="button" id="btn-DU" value="Down-Up">
+                    <input type="button" id="btn-LR" value="Left-Right">
+                    <input type="button" id="btn-RL" value="Right-Left">
+                    <input type="hidden" id='direction' value="UD">
+                </p>
+                <div id="mynetwork"></div>
+            </div>
+            <div class="col-md-4">
+                <h2>Node Properties</h2>
+                <i>Select a node on the AST graph to see properties.</i>
+                <p id="selection"></p>
+            </div>
+        </div>
+    <script language="JavaScript">
+        var directionInput = document.getElementById("direction");
+        var btnUD = document.getElementById("btn-UD");
+        btnUD.onclick = function () {
+            directionInput.value = "UD";
+            draw();
+        };
+        var btnDU = document.getElementById("btn-DU");
+        btnDU.onclick = function () {
+            directionInput.value = "DU";
+            draw();
+        };
+        var btnLR = document.getElementById("btn-LR");
+        btnLR.onclick = function () {
+            directionInput.value = "LR";
+            draw();
+        };
+        var btnRL = document.getElementById("btn-RL");
+        btnRL.onclick = function () {
+            directionInput.value = "RL";
+            draw();
+        };
+    </script>
 </body>
 </html>

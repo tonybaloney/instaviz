@@ -24,7 +24,9 @@ def home():
     data["code"] = highlight(
         "".join(data["src"]),
         PythonLexer(),
-        HtmlFormatter(linenos=True, linenostart=data["co"].co_firstlineno, linespans='src'),
+        HtmlFormatter(
+            linenos=True, linenostart=data["co"].co_firstlineno, linespans="src"
+        ),
     )
     return data
 
@@ -41,9 +43,9 @@ def dedupe_nodes(l):
     new_list = []
     ids_collected = []
     for i in l:
-        if i['id'] not in ids_collected:
+        if i["id"] not in ids_collected:
             new_list.append(i)
-            ids_collected.append(i['id'])
+            ids_collected.append(i["id"])
     return new_list
 
 
@@ -52,7 +54,9 @@ def node_properties(node):
     for field, value in ast.iter_fields(node):
         if isinstance(value, ast.AST):
             d[field] = node_properties(value)
-        elif isinstance(value, list) and len(value) > 0 and isinstance(value[0], ast.AST):
+        elif (
+            isinstance(value, list) and len(value) > 0 and isinstance(value[0], ast.AST)
+        ):
             d[field] = [node_properties(v) for v in value]
         else:
             d[field] = value
@@ -67,9 +71,17 @@ def node_to_dict(node, parent):
             i.extend(node_to_dict(n, node))
 
     d = node_properties(node)
-    if hasattr(node, 'lineno'):
-        d['lineno'] = node.lineno
-    i.append({'id': id(node), 'name': str(type(node)), 'fields': node._fields, 'parent': id(parent), 'data': json.dumps(d, skipkeys=True)})
+    if hasattr(node, "lineno"):
+        d["lineno"] = node.lineno
+    i.append(
+        {
+            "id": id(node),
+            "name": str(type(node)),
+            "fields": node._fields,
+            "parent": id(parent),
+            "data": json.dumps(d, skipkeys=True),
+        }
+    )
     return i
 
 
@@ -98,14 +110,15 @@ def show_code_object(obj, instructions):
             src = source_f.readlines()
             # Skip the lines before the first line no
             last_line = obj.co_firstlineno
-            for i in data['ins']:
+            for i in data["ins"]:
                 if i.starts_line and i.starts_line > last_line:
                     last_line = i.starts_line
-            src = src[obj.co_firstlineno - 1:last_line]
-            tree = ast.parse(''.join(src), obj.co_filename)
+            src = src[obj.co_firstlineno - 1 : last_line]
+            tree = ast.parse("".join(src), obj.co_filename)
             nodes = node_to_dict(tree, None)
-            data['nodes'] = dedupe_nodes(nodes)
+            data["nodes"] = dedupe_nodes(nodes)
             data["src"] = src
+            data["last_line"] = last_line
     except FileNotFoundError:
         data["src"] = ""
     start()
