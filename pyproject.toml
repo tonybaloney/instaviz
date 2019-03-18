@@ -1,5 +1,5 @@
 [build-system]
-requires = ["flit", "bottle", "jinja2"]
+requires = ["flit"]
 build-backend = "flit.buildapi"
 
 [tool.flit.metadata]
@@ -8,4 +8,4 @@ author = "Anthony Shaw"
 author-email = "anthonyshaw@apache.org"
 home-page = "https://github.com/tonybaloney/instaviz"
 classifiers = ["License :: OSI Approved :: Apache Software License"]
-
+requires = ["bottle", "jinja2", "pygments"]
