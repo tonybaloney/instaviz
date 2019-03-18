@@ -10,3 +10,5 @@ Instaviz is designed to be used like PDB, it will start a webserver when the `sh
 import instaviz; instaviz.show(my_function_or_class)
 
 ```
+
+![](screenshot.png)
