@@ -22,7 +22,7 @@ def home():
     data["code"] = highlight(
         "".join(data["src"]),
         PythonLexer(),
-        HtmlFormatter(linenos=True, linenostart=data["co"].co_firstlineno),
+        HtmlFormatter(linenos=True, linenostart=data["co"].co_firstlineno, linespans='src'),
     )
     return data
 
@@ -47,7 +47,8 @@ def show_code_object(obj, instructions):
     try:
         with open(obj.co_filename, "r") as source_f:
             src = source_f.readlines()
-            src = src[obj.co_firstlineno - 1 :]
+            # Skip the lines before the first line no
+            src = src[obj.co_firstlineno - 1:]
             data["src"] = src
     except FileNotFoundError:
         data["src"] = ""

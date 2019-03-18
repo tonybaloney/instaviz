@@ -7,8 +7,25 @@
     <style>
         {{style}}
     </style>
+    <script type="application/javascript">
+        function showLine(line){
+            el = document.getElementById('src-'+line)
+            if (el !== undefined) {
+                el.classList.add('hll')
+            }
+        }
+        function unshowLine(line){
+            el = document.getElementById('src-'+line)
+            if (el !== undefined) {
+                el.classList.remove('hll')
+            }
+        }
+    </script>
 </head>
+
 <body class="container-fluid">
+
+
  {% if tpl_t == 'AST' %}
     <h1>AST Visualizer</h1>
     <p>Not yet implemented</p>
@@ -59,8 +76,12 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% set ns = namespace(lastline=1) %}
                     {% for instr in ins %}
-                    <tr>
+                    {% if instr.starts_line %}
+                        {% set ns.lastline = instr.starts_line %}
+                    {% endif %}
+                    <tr onmouseenter="showLine({{ns.lastline}})" onmouseleave="unshowLine({{ns.lastline}})">
                         <td>{{instr.opcode}}</td>
                         <td>{{instr.opname}}</td>
                         <td>{{instr.arg}}</td>
