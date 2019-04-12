@@ -17,5 +17,5 @@ def show(obj):
         instructions = get_instructions(obj.__code__)
         show_code_object(obj.__code__, instructions)
     else:
-        print("{0} is not compiled, could not located __code__ attribute.".format(type(obj)))
+        print("{0} is not compiled, could not locate __code__ attribute.".format(type(obj)))
         return
