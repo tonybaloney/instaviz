@@ -3,7 +3,8 @@ Entry points for managing a micro-http server to serve tables.
 """
 import ast
 import json
-from bottle import run, jinja2_view, route, static_file
+from bottle import run, jinja2_view, route, static_file, TEMPLATE_PATH
+import os
 from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
@@ -17,7 +18,7 @@ def server_static(filename):
 
 
 @route("/", name="home")
-@jinja2_view("home.html", template_lookup=["instaviz/templates"])
+@jinja2_view("home.html")
 def home():
     global data
     data["style"] = HtmlFormatter().get_style_defs(".highlight")
@@ -35,7 +36,11 @@ def start(host="localhost", port=8080):
     """
     Run the web server
     """
-    run(host=host, port=port, reloader=True)
+    # set TEMPLATE_PATH to use an absolute path pointing to our directory
+    abs_app_dir_path = os.path.dirname(os.path.realpath(__file__))
+    abs_views_path = os.path.join(abs_app_dir_path, 'templates')
+    TEMPLATE_PATH.insert(0, abs_views_path )
+    run(host=host, port=port)
     print(f"Running web-server on http://{host}:{port}/")
 
 
