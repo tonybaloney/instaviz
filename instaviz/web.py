@@ -9,12 +9,14 @@ from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
 
+
+PACKAGE_PATH = os.path.dirname(os.path.realpath(__file__))
 data = {}
 
 
 @route("/static/<filename>")
 def server_static(filename):
-    return static_file(filename, root="instaviz/static")
+    return static_file(filename, root=os.path.join(PACKAGE_PATH, "static"))
 
 
 @route("/", name="home")
@@ -36,10 +38,8 @@ def start(host="localhost", port=8080):
     """
     Run the web server
     """
-    # set TEMPLATE_PATH to use an absolute path pointing to our directory
-    abs_app_dir_path = os.path.dirname(os.path.realpath(__file__))
-    abs_views_path = os.path.join(abs_app_dir_path, 'templates')
-    TEMPLATE_PATH.insert(0, abs_views_path )
+    # set TEMPLATE_PATH to use an absolute path pointing to our directory    
+    TEMPLATE_PATH.insert(0, os.path.join(PACKAGE_PATH, "templates"))
     run(host=host, port=port)
     print(f"Running web-server on http://{host}:{port}/")
 
