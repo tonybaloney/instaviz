@@ -97,8 +97,10 @@ def show_code_object(obj, instructions):
     data["co"] = {
         attr: getattr(obj, attr)
         for attr in dir(obj)
-        if attr.startswith("co_") and attr not in {"co_code"}
+        if attr.startswith("co_")
     }
+    data["co"]["co_code"] = data["co"]["co_code"].hex()
+
     data["tpl_t"] = "CO"
     data["ins"] = list(instructions)
     # Read source code
