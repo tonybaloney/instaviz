@@ -120,20 +120,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>co_argcount</td><td>{{co.co_argcount}}</td></tr>
-                    <tr><td>co_cellvars</td><td>{{co.co_cellvars}}</td></tr>
-                    <tr><td>co_code</td><td>{{co.co_code.hex()}}</td></tr>
-                    <tr><td>co_consts</td><td>{{co.co_consts}}</td></tr>
-                    <tr><td>co_filename</td><td>{{co.co_filename}}</td></tr>
-                    <tr><td>co_firstlineno</td><td>{{co.co_firstlineno}}</td></tr>
-                    <tr><td>co_freevars</td><td>{{co.co_freevars}}</td></tr>
-                    <tr><td>co_kwonlyargcount</td><td>{{co.co_kwonlyargcount}}</td></tr>
-                    <tr><td>co_lnotab</td><td>{{co.co_lnotab}}</td></tr>
-                    <tr><td>co_name</td><td>{{co.co_name}}</td></tr>
-                    <tr><td>co_names</td><td>{{co.co_names}}</td></tr>
-                    <tr><td>co_nlocals</td><td>{{co.co_nlocals}}</td></tr>
-                    <tr><td>co_stacksize</td><td>{{co.co_stacksize}}</td></tr>
-                    <tr><td>co_varnames</td><td>{{co.co_varnames}}</td></tr>
+                    {% for co_attr, value in co.items() %}
+                        <tr><td>{{ co_attr }}</td><td>{{ value }}</td></tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

@@ -26,7 +26,7 @@ def home():
         "".join(data["src"]),
         PythonLexer(),
         HtmlFormatter(
-            linenos=True, linenostart=data["co"].co_firstlineno, linespans="src"
+            linenos=True, linenostart=data["co"]["co_firstlineno"], linespans="src"
         ),
     )
     return data
@@ -38,8 +38,8 @@ def start(host="localhost", port=8080):
     """
     # set TEMPLATE_PATH to use an absolute path pointing to our directory
     abs_app_dir_path = os.path.dirname(os.path.realpath(__file__))
-    abs_views_path = os.path.join(abs_app_dir_path, 'templates')
-    TEMPLATE_PATH.insert(0, abs_views_path )
+    abs_views_path = os.path.join(abs_app_dir_path, "templates")
+    TEMPLATE_PATH.insert(0, abs_views_path)
     run(host=host, port=port)
     print(f"Running web-server on http://{host}:{port}/")
 
@@ -94,7 +94,11 @@ def show_code_object(obj, instructions):
     Render code object
     """
     global data
-    data["co"] = obj
+    data["co"] = {
+        attr: getattr(obj, attr)
+        for attr in dir(obj)
+        if attr.startswith("co_") and attr not in {"co_code"}
+    }
     data["tpl_t"] = "CO"
     data["ins"] = list(instructions)
     # Read source code
