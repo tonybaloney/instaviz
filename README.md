@@ -25,6 +25,25 @@ import instaviz; instaviz.show(my_function)
 
 ![](screenshot.png)
 
+You can also run instaviz inside the Python REPL.
+
+```bash
+[GCC 7.3.0] :: Anaconda, Inc. on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import instaviz
+>>> def fib(n):
+...     a, b = 1, 1
+...     for i in range(2, n + 1):
+...         a, b = b, a + b
+...     return b
+... 
+>>> instaviz.show(fib)
+Bottle v0.12.17 server starting up (using WSGIRefServer())...
+Listening on http://localhost:8080/
+Hit Ctrl-C to quit.
+
+```
+
 ## Credits
 
 This package bundles some 3rd party javascript libraries. All libraries are bundled in the package so that the WebUI doesn't need to make any requests to the internet to protect the privacy of your code.
