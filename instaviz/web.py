@@ -8,13 +8,16 @@ import os
 from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import HtmlFormatter
+from dill import source
 
 data = {}
 
 
 @route("/static/<filename>")
 def server_static(filename):
-    return static_file(filename, root="instaviz/static")
+    abs_app_dir_path = os.path.dirname(os.path.realpath(__file__))
+    root_path = os.path.join(abs_app_dir_path, 'static')
+    return static_file(filename, root=root_path)
 
 
 @route("/", name="home")
@@ -93,6 +96,7 @@ def show_code_object(obj, instructions):
     """
     Render code object
     """
+    cobj = obj.__code__
     global data
     data["co"] = {
         attr: getattr(obj, attr)
@@ -103,23 +107,15 @@ def show_code_object(obj, instructions):
 
     data["tpl_t"] = "CO"
     data["ins"] = list(instructions)
-    # Read source code
-    try:
-        with open(obj.co_filename, "r") as source_f:
-            src = source_f.readlines()
-            # Skip the lines before the first line no
-            last_line = obj.co_firstlineno
-            for i in data["ins"]:
-                if i.starts_line and i.starts_line > last_line:
-                    last_line = i.starts_line
-            src = src[obj.co_firstlineno - 1 : last_line]
-            tree = ast.parse("".join(src), obj.co_filename)
-            nodes = node_to_dict(tree, None)
-            data["nodes"] = dedupe_nodes(nodes)
-            data["src"] = src
-            data["last_line"] = last_line
-    except FileNotFoundError:
-        data["src"] = ""
+
+    (lines, start_line) = source.getsourcelines(obj)
+    src = "".join(lines)
+    tree = ast.parse(src, cobj.co_filename)
+    nodes = node_to_dict(tree, None)
+    data["nodes"] = dedupe_nodes(nodes)
+    data["src"] = src
+    data["last_line"] = start_line + len(lines)
+
     start()
 
 

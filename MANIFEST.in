@@ -1,0 +1,3 @@
+include instaviz/static/*.css
+include instaviz/static/*.js
+include instaviz/templates/*.html

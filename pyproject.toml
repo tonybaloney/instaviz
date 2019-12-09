@@ -4,6 +4,7 @@ build-backend = "flit.buildapi"
 
 [tool.flit.metadata]
 module = "instaviz"
+readme = README.md
 author = "Anthony Shaw"
 author-email = "anthonyshaw@apache.org"
 home-page = "https://github.com/tonybaloney/instaviz"
