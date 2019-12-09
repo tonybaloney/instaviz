@@ -99,8 +99,8 @@ def show_code_object(obj, instructions):
     cobj = obj.__code__
     global data
     data["co"] = {
-        attr: getattr(obj, attr)
-        for attr in dir(obj)
+        attr: getattr(cobj, attr)
+        for attr in dir(cobj)
         if attr.startswith("co_")
     }
     data["co"]["co_code"] = data["co"]["co_code"].hex()

@@ -6,5 +6,4 @@ def foo():
     b = a + 1
     return b
 
-
 instaviz.show(foo)
