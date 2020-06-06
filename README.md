@@ -3,7 +3,7 @@ Instant visualization of Python AST and Code Objects.
 
 ## Installation
 
-Requires modern Python 3.6+
+Requires modern Python 3.7+
 
 ```bash
 pip install instaviz
