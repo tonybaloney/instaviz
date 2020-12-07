@@ -7,7 +7,7 @@ from .web import show_ast, show_code_object
 from dis import get_instructions
 
 
-def show(obj):
+def show(obj, host='localhost', port=8080):
     """
     Start a web server and show `obj` in the WebUI
     Assumes `obj` is compiled and has `__code__` attribute.
@@ -15,7 +15,7 @@ def show(obj):
     """
     if hasattr(obj, "__code__"):
         instructions = get_instructions(obj.__code__)
-        show_code_object(obj, instructions)
+        show_code_object(obj, instructions, host, port)
     else:
         print("{0} is not compiled, could not locate __code__ attribute.".format(type(obj)))
         return

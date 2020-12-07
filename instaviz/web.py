@@ -92,7 +92,7 @@ def node_to_dict(node, parent):
     return i
 
 
-def show_code_object(obj, instructions):
+def show_code_object(obj, instructions, host, port):
     """
     Render code object
     """
@@ -116,7 +116,7 @@ def show_code_object(obj, instructions):
     data["src"] = src
     data["last_line"] = start_line + len(lines)
 
-    start()
+    start(host, port)
 
 
 def show_ast(ast):

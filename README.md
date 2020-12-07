@@ -44,6 +44,15 @@ Hit Ctrl-C to quit.
 
 ```
 
+At times you may wish to be able to access the page from an external device. This can be acheived by
+specifying the host and port when calling the show function.
+
+```
+instaviz.show(func_name, host='*', port=80)
+
+```
+
+
 ## Credits
 
 This package bundles some 3rd party javascript libraries. All libraries are bundled in the package so that the WebUI doesn't need to make any requests to the internet to protect the privacy of your code.
