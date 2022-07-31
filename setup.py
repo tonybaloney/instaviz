@@ -26,5 +26,5 @@ setup(
     ],
     packages=["instaviz"],
     include_package_data=True,
-    install_requires=["bottle", "jinja2", "pygments", "dill"]
+    install_requires=["bottle", "jinja2", "pygments", "dill", "pyreadline"]
 )
